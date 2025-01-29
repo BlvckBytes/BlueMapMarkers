@@ -62,6 +62,7 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       as provided by the template's configuration; from the user's point of view, they are hidden behind
       the single suffix-less identifier and are managed at once; placeholders are the same across all entries.
       This may be useful for multiple versions at different zoom-level-intervals each.
+
    */
 
   @Override
@@ -94,6 +95,7 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
 
       getServer().getPluginManager().registerEvents(commandSendListener, this);
 
+      // See: https://github.com/BlueMap-Minecraft/BlueMapAPI/wiki
 //      var mapApi = BlueMapAPI.getInstance().orElseThrow(() -> new IllegalStateException("Could not access the BlueMap-API"));
     } catch (Exception e) {
       logger.log(Level.SEVERE, "An error occurred while trying to enable the plugin!", e);
