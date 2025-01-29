@@ -1,0 +1,33 @@
+# ______________           ______  ___              ______  ___             ______
+#   ___  __ )__  /___  _________   |/  /_____ ___________   |/  /_____ __________  /_____________________
+#   __  __  |_  /_  / / /  _ \_  /|_/ /_  __ `/__  __ \_  /|_/ /_  __ `/_  ___/_  //_/  _ \_  ___/_  ___/
+#   _  /_/ /_  / / /_/ //  __/  /  / / / /_/ /__  /_/ /  /  / / / /_/ /_  /   _  ,<  /  __/  /   _(__  )
+#   /_____/ /_/  \__,_/ \___//_/  /_/  \__,_/ _  .___//_/  /_/  \__,_/ /_/    /_/|_| \___//_/    /____/
+#   /_/
+#
+# BlueMapMarkers - Developed by BlvckBytes <blvckbytes@gmail.com>
+# Repository - https://github.com/BlvckBytes/BlueMapMarkers
+# ASCII-Art - https://patorjk.com/software/taag/#p=display&f=Speed
+
+commands:
+  blueMapMarkers:
+    name: 'bluemapmarkers'
+    aliases:
+      - bmarkers
+      - markers
+
+playerMessages:
+  missingCommandPermission$: 'lut["prefix"] & "&cDir fehlt das nötige Recht um diesen Befehl ausführen zu können!"'
+  playerOnlyCommand$: 'lut["prefix"] & "&cDieser Befehl steht nur Spielern zur Verfügung!"'
+  # - usage: String
+  singleUsageMessage$: 'lut["prefix"] & "&cUsage: " & usage'
+  # - usages: List<String>
+  multiUsageScreen$: |
+    flatten(
+      "&8&m                                   &8[&3BMM&8]&8&m                                   ",
+      map(usages, (it) => "&8> &e" & it),
+      "&8&m                                   &8[&3BMM&8]&8&m                                   "
+    )
+
+lut:
+  prefix: '&8[&3BMM&8] '
