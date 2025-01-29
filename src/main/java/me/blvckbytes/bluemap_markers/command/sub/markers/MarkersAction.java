@@ -6,6 +6,7 @@ public enum MarkersAction {
   CREATE,
   DELETE,
   RENAME,
+  TELEPORT_TO,
   LIST,
   NEAR,
   TOGGLE_LISTED,

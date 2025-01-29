@@ -18,6 +18,7 @@ public class MarkersCommand extends SubCommandWithSubCommands {
     registerSubCommand(new MarkersToggleListedCommand());
     registerSubCommand(new MarkersSetSortingCommand());
     registerSubCommand(new MarkersMoveHereCommand());
+    registerSubCommand(new MarkersTeleportToCommand());
     registerSubCommand(new MarkersMoveToCommand());
     registerSubCommand(new MarkersSetVariableCommand());
     registerSubCommand(new MarkersUnsetVariableCommand());
