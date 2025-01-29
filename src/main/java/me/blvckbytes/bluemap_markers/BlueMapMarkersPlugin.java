@@ -5,6 +5,7 @@ import me.blvckbytes.bluemap_markers.command.BlueMapMarkersCommand;
 import me.blvckbytes.bluemap_markers.config.BlueMapMarkersCommandSection;
 import me.blvckbytes.bluemap_markers.config.MainSection;
 import me.blvckbytes.bluemap_markers.listener.CommandSendListener;
+import me.blvckbytes.bluemap_markers.stores.ImageStore;
 import me.blvckbytes.bukkitevaluable.CommandUpdater;
 import me.blvckbytes.bukkitevaluable.ConfigKeeper;
 import me.blvckbytes.bukkitevaluable.ConfigManager;
@@ -15,6 +16,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class BlueMapMarkersPlugin extends JavaPlugin {
+
+  // TODO: Have configurable usage-strings
+  // TODO: Have hover-able usage-strings (descriptions)
 
   /*
     - Marker-sets group markers into named and toggleable containers
@@ -77,8 +81,10 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       var config = new ConfigKeeper<>(configManager, "config.yml", MainSection.class);
       var commandUpdater = new CommandUpdater(this);
 
+      var imageStore = new ImageStore();
+
       var blueMapMarkersCommand = Objects.requireNonNull(getCommand(BlueMapMarkersCommandSection.INITIAL_NAME));
-      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(config);
+      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(imageStore, config);
 
       blueMapMarkersCommand.setExecutor(blueMapMarkersCommandHandler);
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.function.Function;
 
 public abstract class SubCommand {
 
@@ -96,5 +97,22 @@ public abstract class SubCommand {
       return null;
 
     return subCommandMap.get(matchedAction);
+  }
+
+  // ================================================================================
+  // Utilities
+  // ================================================================================
+
+  protected static <T> List<T> applyPatternFilter(List<T> input, Function<T, String> keyExtractor, String pattern) {
+    return input.stream()
+      // TODO: Implement
+      .filter(it -> !keyExtractor.apply(it).isBlank())
+      .toList();
+  }
+
+  protected static List<String> parseQuotesSupportingArguments(String[] args) {
+    var result = new ArrayList<String>(args.length);
+
+    return result;
   }
 }
