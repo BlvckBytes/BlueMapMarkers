@@ -22,7 +22,7 @@ public abstract class SubCommandWithSubCommands extends SubCommand {
   }
 
   @Override
-  public CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
+  public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
     return tryRelayCommand(actionMatcher, subCommands, sender, args, actions);
   }
 

@@ -13,7 +13,7 @@ import java.util.Queue;
 public class ImagesDownloadCommand extends SubCommand {
 
   @Override
-  public CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
+  public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
     return CommandFailure.INVALID_USAGE;
   }
 
