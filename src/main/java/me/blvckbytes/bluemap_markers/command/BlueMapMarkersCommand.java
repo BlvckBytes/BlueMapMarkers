@@ -41,17 +41,17 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
     var actions = new ArrayDeque<NormalizedConstant<?>>();
     var result = SubCommand.tryRelayCommand(SubCommandAction.matcher, subCommands, sender, args, actions);
 
-    if (result == CommandResult.INVALID_USAGE || result == CommandResult.UNREGISTERED) {
+    if (result == CommandFailure.INVALID_USAGE || result == CommandFailure.UNREGISTERED) {
       printHelp(actions, sender, label);
       return true;
     }
 
-    if (result == CommandResult.PLAYER_ONLY) {
+    if (result == CommandFailure.PLAYER_ONLY) {
       config.rootSection.playerMessages.playerOnlyCommand.sendMessage(sender, config.rootSection.builtBaseEnvironment);
       return true;
     }
 
-    if (result == CommandResult.MISSING_PERMISSION) {
+    if (result == CommandFailure.MISSING_PERMISSION) {
       config.rootSection.playerMessages.missingCommandPermission.sendMessage(sender, config.rootSection.builtBaseEnvironment);
       return true;
     }

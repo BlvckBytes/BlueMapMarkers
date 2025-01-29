@@ -12,7 +12,7 @@ import java.util.Queue;
 
 public abstract class SubCommand {
 
-  public abstract CommandResult onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> queue);
+  public abstract CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> queue);
 
   public abstract List<String> onTabComplete(CommandSender sender, String[] args);
 
@@ -45,7 +45,7 @@ public abstract class SubCommand {
 
   public abstract NormalizedConstant<?> getCorrespondingAction();
 
-  public static CommandResult tryRelayCommand(
+  public static CommandFailure tryRelayCommand(
     EnumMatcher<? extends Enum<?>> matcher,
     Map<NormalizedConstant<?>, SubCommand> subCommandMap,
     CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions
@@ -53,7 +53,7 @@ public abstract class SubCommand {
     var subCommand = tryFindSubCommand(matcher, subCommandMap, args);
 
     if (subCommand == null)
-      return CommandResult.UNREGISTERED;
+      return CommandFailure.UNREGISTERED;
 
     var subArgs = new String[args.length - 1];
     System.arraycopy(args, 1, subArgs, 0, subArgs.length);

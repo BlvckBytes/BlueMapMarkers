@@ -1,6 +1,6 @@
 package me.blvckbytes.bluemap_markers.command.sub.sets.sub;
 
-import me.blvckbytes.bluemap_markers.command.CommandResult;
+import me.blvckbytes.bluemap_markers.command.CommandFailure;
 import me.blvckbytes.bluemap_markers.command.SubCommand;
 import me.blvckbytes.bluemap_markers.command.sub.sets.SetsAction;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
@@ -13,8 +13,8 @@ import java.util.Queue;
 public class SetsSetDefaultHiddenCommand extends SubCommand {
 
   @Override
-  public CommandResult onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
-    return CommandResult.INVALID_USAGE;
+  public CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
+    return CommandFailure.INVALID_USAGE;
   }
 
   @Override
