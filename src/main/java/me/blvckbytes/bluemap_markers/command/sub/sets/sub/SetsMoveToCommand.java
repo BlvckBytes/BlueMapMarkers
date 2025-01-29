@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
 
-public class SetsCreateCommand extends SubCommand {
+public class SetsMoveToCommand extends SubCommand {
 
   @Override
   public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
@@ -29,6 +29,6 @@ public class SetsCreateCommand extends SubCommand {
 
   @Override
   public NormalizedConstant<?> getCorrespondingAction() {
-    return SetsAction.matcher.getNormalizedConstant(SetsAction.CREATE);
+    return SetsAction.matcher.getNormalizedConstant(SetsAction.MOVE_TO);
   }
 }

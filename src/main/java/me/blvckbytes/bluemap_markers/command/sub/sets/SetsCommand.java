@@ -10,12 +10,14 @@ public class SetsCommand extends SubCommandWithSubCommands {
   public SetsCommand() {
     super(SetsAction.matcher);
 
-    registerSubCommand(new SetsListCommand());
-    registerSubCommand(new SetsDeleteCommand());
-    registerSubCommand(new SetsRenameCommand());
     registerSubCommand(new SetsCreateCommand());
+    registerSubCommand(new SetsDeleteCommand());
+    registerSubCommand(new SetsListCommand());
+    registerSubCommand(new SetsRenameCommand());
+    registerSubCommand(new SetsToggleDefaultHiddenCommand());
+    registerSubCommand(new SetsMoveToCommand());
     registerSubCommand(new SetsSetLabelCommand());
-    registerSubCommand(new SetsSetToggleableCommand());
+    registerSubCommand(new SetsToggleToggleableCommand());
     registerSubCommand(new SetsSetSortingCommand());
   }
 

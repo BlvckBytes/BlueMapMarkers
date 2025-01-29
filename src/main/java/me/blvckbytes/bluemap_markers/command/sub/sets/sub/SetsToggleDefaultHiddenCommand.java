@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
 
-public class SetsCreateCommand extends SubCommand {
+public class SetsToggleDefaultHiddenCommand extends SubCommand {
 
   @Override
   public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
@@ -24,11 +24,11 @@ public class SetsCreateCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <World>");
+    return List.of(getCorrespondingAction().normalizedName + " <Name>");
   }
 
   @Override
   public NormalizedConstant<?> getCorrespondingAction() {
-    return SetsAction.matcher.getNormalizedConstant(SetsAction.CREATE);
+    return SetsAction.matcher.getNormalizedConstant(SetsAction.TOGGLE_DEFAULT_HIDDEN);
   }
 }

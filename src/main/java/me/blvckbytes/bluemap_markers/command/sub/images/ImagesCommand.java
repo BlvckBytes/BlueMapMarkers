@@ -10,8 +10,8 @@ public class ImagesCommand extends SubCommandWithSubCommands {
   public ImagesCommand() {
     super(ImagesAction.matcher);
 
-    registerSubCommand(new ImagesDeleteCommand());
     registerSubCommand(new ImagesDownloadCommand());
+    registerSubCommand(new ImagesDeleteCommand());
     registerSubCommand(new ImagesListCommand());
     registerSubCommand(new ImagesRenameCommand());
   }

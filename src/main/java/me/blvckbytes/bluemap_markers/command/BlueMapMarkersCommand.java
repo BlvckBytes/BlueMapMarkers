@@ -1,6 +1,7 @@
 package me.blvckbytes.bluemap_markers.command;
 
 import me.blvckbytes.bluemap_markers.command.sub.images.ImagesCommand;
+import me.blvckbytes.bluemap_markers.command.sub.markers.MarkersCommand;
 import me.blvckbytes.bluemap_markers.command.sub.sets.SetsCommand;
 import me.blvckbytes.bluemap_markers.config.MainSection;
 import me.blvckbytes.bukkitevaluable.ConfigKeeper;
@@ -25,6 +26,7 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
 
     registerSubCommand(new ImagesCommand());
     registerSubCommand(new SetsCommand());
+    registerSubCommand(new MarkersCommand());
   }
 
   private void registerSubCommand(SubCommand command) {

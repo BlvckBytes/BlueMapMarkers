@@ -1,8 +1,8 @@
-package me.blvckbytes.bluemap_markers.command.sub.sets.sub;
+package me.blvckbytes.bluemap_markers.command.sub.markers.sub;
 
 import me.blvckbytes.bluemap_markers.command.CommandFailure;
 import me.blvckbytes.bluemap_markers.command.SubCommand;
-import me.blvckbytes.bluemap_markers.command.sub.sets.SetsAction;
+import me.blvckbytes.bluemap_markers.command.sub.markers.MarkersAction;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
 
-public class SetsCreateCommand extends SubCommand {
+public class MarkersCreateCommand extends SubCommand {
 
   @Override
   public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
@@ -24,11 +24,11 @@ public class SetsCreateCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <World>");
+    return List.of(getCorrespondingAction().normalizedName + " <Name> <Set>");
   }
 
   @Override
   public NormalizedConstant<?> getCorrespondingAction() {
-    return SetsAction.matcher.getNormalizedConstant(SetsAction.CREATE);
+    return MarkersAction.matcher.getNormalizedConstant(MarkersAction.CREATE);
   }
 }
