@@ -16,6 +16,23 @@ commands:
       - bmarkers
       - markers
 
+images:
+  imageFileExtensionByMimeType:
+    image/apng: '.apng'
+    image/avif: '.avif'
+    image/gif: '.gif'
+    image/jpeg: '.jpeg'
+    image/png: '.png'
+    image/svg+xml: '.svg'
+    image/webp: '.webp'
+    image/x-icon: '.ico'
+    image/bmp: '.bmp'
+
+  additionalFileExtensions:
+    - '.jpg'
+
+  httpRequestTimeoutSeconds: 3
+
 playerMessages:
   missingCommandPermission$: 'lut["prefix"] & "&cDir fehlt das nötige Recht um diesen Befehl ausführen zu können!"'
   playerOnlyCommand$: 'lut["prefix"] & "&cDieser Befehl steht nur Spielern zur Verfügung!"'

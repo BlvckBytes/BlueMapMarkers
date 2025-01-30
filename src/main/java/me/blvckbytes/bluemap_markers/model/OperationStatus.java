@@ -12,7 +12,7 @@ public enum OperationStatus {
     return new OperationResult<>(this, null);
   }
 
-  public <T> OperationResult<?> asResult(T parameter) {
+  public <T> OperationResult<T> asResult(T parameter) {
     return new OperationResult<>(this, parameter);
   }
 }

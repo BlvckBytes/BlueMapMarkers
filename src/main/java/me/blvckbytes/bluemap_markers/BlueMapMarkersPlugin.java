@@ -108,7 +108,7 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       var config = new ConfigKeeper<>(configManager, "config.yml", MainSection.class);
       var commandUpdater = new CommandUpdater(this);
 
-      var imageStore = new ImageStore();
+      var imageStore = new ImageStore(logger, config, blueMap.getWebApp().getWebRoot());
 
       var blueMapMarkersCommand = Objects.requireNonNull(getCommand(BlueMapMarkersCommandSection.INITIAL_NAME));
       var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(imageStore, config);

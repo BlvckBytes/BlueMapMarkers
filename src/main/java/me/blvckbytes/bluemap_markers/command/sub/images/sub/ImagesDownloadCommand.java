@@ -35,6 +35,7 @@ public class ImagesDownloadCommand extends SubCommand {
       switch (result.parameter) {
         case NAME_CONTAINS_EXTENSION -> sender.sendMessage("§cThe file-name " + name + " contains an extension; it is automatically determined and has to be left out!");
         case URL_INACCESSIBLE -> sender.sendMessage("§cThe URL " + url + " could not be accessed successfully!");
+        case URL_MALFORMED -> sender.sendMessage("§cThe URL " + url + " is malformed!");
         case URL_NO_SUPPORTED_IMAGE -> sender.sendMessage("§cThe URL " + url + " does not point *directly* at a valid/supported image-file!");
       }
       return null;

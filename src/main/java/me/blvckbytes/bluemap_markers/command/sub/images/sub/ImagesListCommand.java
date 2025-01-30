@@ -48,7 +48,7 @@ public class ImagesListCommand extends SubCommand {
 
     for (var mapImage : mapImages) {
       var fileSize = Math.round(mapImage.fileSizeInBytes() / 1000.0 * 100.0) / 100.0;
-      sender.sendMessage("§8> §a" + mapImage.fileName() + "§7(" + fileSize + ")");
+      sender.sendMessage("§8> §a" + mapImage.fileName() + " §7(" + fileSize + "KB)");
     }
 
     sender.sendMessage("§8§m                         §8[§aImages§8]§8§m                         ");

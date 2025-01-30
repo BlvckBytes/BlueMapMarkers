@@ -13,6 +13,7 @@ public class MainSection extends AConfigSection {
   public CommandsSection commands;
   public PlayerMessagesSection playerMessages;
   public List<HTMLMarkerTemplatesSection> htmlMarkerTemplates;
+  public ImagesSection images;
 
   public MainSection(EvaluationEnvironmentBuilder baseEnvironment) {
     super(baseEnvironment);

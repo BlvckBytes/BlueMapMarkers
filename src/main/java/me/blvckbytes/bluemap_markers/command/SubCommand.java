@@ -5,10 +5,7 @@ import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Function;
 
 public abstract class SubCommand {
@@ -111,8 +108,7 @@ public abstract class SubCommand {
   }
 
   protected static List<String> parseQuotesSupportingArguments(String[] args) {
-    var result = new ArrayList<String>(args.length);
-
-    return result;
+    // TODO: Implement
+    return Arrays.asList(args);
   }
 }
