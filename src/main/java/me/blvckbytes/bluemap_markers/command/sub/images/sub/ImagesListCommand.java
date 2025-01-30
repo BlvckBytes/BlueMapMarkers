@@ -4,7 +4,6 @@ import me.blvckbytes.bluemap_markers.command.CommandFailure;
 import me.blvckbytes.bluemap_markers.command.SubCommand;
 import me.blvckbytes.bluemap_markers.command.sub.images.ImagesAction;
 import me.blvckbytes.bluemap_markers.config.MainSection;
-import me.blvckbytes.bluemap_markers.model.MapImage;
 import me.blvckbytes.bluemap_markers.stores.ImageStore;
 import me.blvckbytes.bukkitevaluable.ConfigKeeper;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
@@ -16,8 +15,6 @@ import java.util.Queue;
 import java.util.StringJoiner;
 
 public class ImagesListCommand extends SubCommand {
-
-  // TODO: Implement the pattern search-feature
 
   private final ImageStore imageStore;
   private final ConfigKeeper<MainSection> config;
@@ -51,7 +48,7 @@ public class ImagesListCommand extends SubCommand {
     if (page <= 0)
       page = 1;
 
-    String pattern = null;
+    String stringPattern = null;
 
     if (args.length >= 2) {
       var patternJoiner = new StringJoiner(" ");
@@ -59,12 +56,21 @@ public class ImagesListCommand extends SubCommand {
       for (var i = 1; i < args.length; ++i)
         patternJoiner.add(args[i]);
 
-      pattern = patternJoiner.toString();
-      mapImages = applyPatternFilter(mapImages, MapImage::fileName, pattern);
+      stringPattern = patternJoiner.toString();
+      var pattern = tryCompileGlobPattern(stringPattern, true);
+
+      if (pattern == null) {
+        sender.sendMessage("§cMalformed pattern provided §4" + stringPattern + "§c!");
+        return null;
+      }
+
+      mapImages = mapImages.stream()
+        .filter(it -> pattern.matcher(it.fileName()).matches())
+        .toList();
     }
 
     if (mapImages.isEmpty()) {
-      sender.sendMessage("§cYour filter of §4" + pattern + " §cdid not yield any results!");
+      sender.sendMessage("§cYour filter of §4" + stringPattern + " §cdid not yield any results!");
       return null;
     }
 
@@ -83,8 +89,8 @@ public class ImagesListCommand extends SubCommand {
     sender.sendMessage("§8§m                         §8[§aImages§8]§8§m                         ");
     sender.sendMessage("§7Page " + page + "/" + numberOfPages + "; " + pageSize + " per page; " + numberOfEntries + " total");
 
-    if (pattern != null)
-      sender.sendMessage("§7(With filter §a" + pattern + "§7)");
+    if (stringPattern != null)
+      sender.sendMessage("§7(With pattern §a" + stringPattern + "§7)");
 
     for (var mapImage : mapImages) {
       var fileSize = Math.round(mapImage.fileSizeInBytes() / 1000.0 * 100.0) / 100.0;
