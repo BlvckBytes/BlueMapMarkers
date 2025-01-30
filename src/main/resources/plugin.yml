@@ -3,7 +3,7 @@ main: me.blvckbytes.bluemap_markers.BlueMapMarkersPlugin
 version: 0.1
 author: BlvckBytes
 api-version: 1.21
-#depend: [BlueMap]
+depend: [BlueMap]
 commands:
   blueMapMarkers:
     description: 'Manage markers as rendered on the BlueMap'
