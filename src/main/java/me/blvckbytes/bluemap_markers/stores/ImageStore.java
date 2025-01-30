@@ -21,6 +21,9 @@ import java.util.logging.Logger;
 
 public class ImageStore {
 
+  // TODO: Allow to drop extensions on names (delete, rename, isImage) but have a IDENTIFIER_AMBIGUOUS status-code if there are multiple candidates
+  // TODO: Add public API to check if a name is an existing image - isImage(name)
+
   private final Logger logger;
   private final File assetsFolder;
   private final ConfigKeeper<MainSection> config;
