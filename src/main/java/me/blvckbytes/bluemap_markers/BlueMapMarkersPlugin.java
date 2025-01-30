@@ -24,52 +24,10 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
   // TODO: Have hover-able usage-strings (descriptions)
 
   /*
-    - Marker-sets group markers into named and toggleable containers
-      - id: String (internal to this plugin)
-      - toggleable: Boolean
-      - label: String
-      - default-hidden: Boolean
-      - sorting: Integer
-      - markers: Marker[]
-
-    - Each world can have arbitrarily many marker-sets, each with a unique ID
-
-    - Markers will always be rendered as HTML, based on configurable templates containing placeholders;
-      - id: String (internal to this plugin)
-      A HTML-Marker has the following properties:
-      - classes: String[]
-      - anchor: Vector2
-      - html: String
-
-    - HTML-templates are stored in the configuration-file and can only be edited/managed there; they have
-      unique names also, which essentially are their YAML keys under the containing parent.
-
-    - Marker-placeholders are typed and do not just accept any values, as to ensure
-      proper behavior when rendering. Types that come to mind are:
-      - Web-Color RGB, RGBA, HEX, HEX-A
-      - Text
-      - Image
-
-    - Images are stored in /bluemap/web/assets and can have the following file-extensions:
-      - png
-      - jpg
-      - jpeg
-      - svg
-      - gif
-
-    - Images are automatically detected and can be downloaded into said directory via
-      a command, while their full name (file-name plus extension) acts as a unique identifier.
-
-    - Each world can have markers at arbitrary positions
-      - Create new at- or move existing markers to
-        - The player's location
-        - Specified x/y/z coordinates
-
-    - A marker-template may not only specify a single- but multiple markers, each with a suffix
-      as provided by the template's configuration; from the user's point of view, they are hidden behind
-      the single suffix-less identifier and are managed at once; placeholders are the same across all entries.
-      This may be useful for multiple versions at different zoom-level-intervals each.
-
+    A marker-template may not only specify a single- but multiple markers, each with a suffix
+    as provided by the template's configuration; from the user's point of view, they are hidden behind
+    the single suffix-less identifier and are managed at once; placeholders are the same across all entries.
+    This may be useful for multiple versions at different zoom-level-intervals each.
    */
 
   private static final int API_ENABLE_TIMEOUT_S = 30;
