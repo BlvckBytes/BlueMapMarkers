@@ -14,6 +14,7 @@ public class ImagesSection extends AConfigSection {
   public Map<String, String> imageFileExtensionByMimeType;
   public @Nullable List<String> additionalFileExtensions;
   public int httpRequestTimeoutSeconds;
+  public int imagesListCommandPageSize;
 
   @CSIgnore
   public Set<String> imageFileExtensions;
@@ -23,6 +24,7 @@ public class ImagesSection extends AConfigSection {
 
     this.imageFileExtensionByMimeType = new HashMap<>();
     this.httpRequestTimeoutSeconds = 3000;
+    this.imagesListCommandPageSize = 15;
   }
 
   @Override
@@ -46,5 +48,8 @@ public class ImagesSection extends AConfigSection {
       if (fileExtension.indexOf('.', dotIndex + 1) > 0)
         throw new MappingError("File-extension \"" + fileExtension + "\" of property \"imageFileExtensionByMimeType\" or \"additionalFileExtensions\" contained more than one dot!");
     }
+
+    if (this.imagesListCommandPageSize <= 0)
+      throw new MappingError("The property \"imagesListCommandPageSize\" cannot be less than or equal to zero!");
   }
 }

@@ -1,5 +1,6 @@
 package me.blvckbytes.bluemap_markers.command;
 
+import me.blvckbytes.bluemap_markers.command.sub.ReloadConfigCommand;
 import me.blvckbytes.bluemap_markers.command.sub.images.ImagesCommand;
 import me.blvckbytes.bluemap_markers.command.sub.markers.MarkersCommand;
 import me.blvckbytes.bluemap_markers.command.sub.sets.SetsCommand;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
 
@@ -25,14 +27,16 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
   public BlueMapMarkersCommand(
     Plugin plugin,
     ImageStore imageStore,
-    ConfigKeeper<MainSection> config
+    ConfigKeeper<MainSection> config,
+    Logger logger
   ) {
     this.config = config;
     this.subCommands = new LinkedHashMap<>();
 
-    registerSubCommand(new ImagesCommand(plugin, imageStore));
+    registerSubCommand(new ImagesCommand(plugin, imageStore, config));
     registerSubCommand(new SetsCommand());
     registerSubCommand(new MarkersCommand());
+    registerSubCommand(new ReloadConfigCommand(config, logger));
   }
 
   private void registerSubCommand(SubCommand command) {

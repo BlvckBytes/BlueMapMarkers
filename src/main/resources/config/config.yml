@@ -32,6 +32,7 @@ images:
     - '.jpg'
 
   httpRequestTimeoutSeconds: 3
+  imagesListCommandPageSize: 15
 
 playerMessages:
   missingCommandPermission$: 'lut["prefix"] & "&cDir fehlt das nötige Recht um diesen Befehl ausführen zu können!"'

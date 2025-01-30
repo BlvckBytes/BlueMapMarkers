@@ -3,21 +3,28 @@ package me.blvckbytes.bluemap_markers.command.sub.images.sub;
 import me.blvckbytes.bluemap_markers.command.CommandFailure;
 import me.blvckbytes.bluemap_markers.command.SubCommand;
 import me.blvckbytes.bluemap_markers.command.sub.images.ImagesAction;
+import me.blvckbytes.bluemap_markers.config.MainSection;
 import me.blvckbytes.bluemap_markers.model.MapImage;
 import me.blvckbytes.bluemap_markers.stores.ImageStore;
+import me.blvckbytes.bukkitevaluable.ConfigKeeper;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.StringJoiner;
 
 public class ImagesListCommand extends SubCommand {
 
-  private final ImageStore imageStore;
+  // TODO: Implement the pattern search-feature
 
-  public ImagesListCommand(ImageStore imageStore) {
+  private final ImageStore imageStore;
+  private final ConfigKeeper<MainSection> config;
+
+  public ImagesListCommand(ImageStore imageStore, ConfigKeeper<MainSection> config) {
     this.imageStore = imageStore;
+    this.config = config;
   }
 
   @Override
@@ -29,10 +36,30 @@ public class ImagesListCommand extends SubCommand {
       return null;
     }
 
+    int pageSize = config.rootSection.images.imagesListCommandPageSize;
+    int page = 1;
+
+    if (args.length >= 1) {
+      try {
+        page = Integer.parseInt(args[0]);
+      } catch (Exception e) {
+        sender.sendMessage("§cMalformed page-number " + args[0]);
+        return null;
+      }
+    }
+
+    if (page <= 0)
+      page = 1;
+
     String pattern = null;
 
-    if (args.length > 0) {
-      pattern = String.join(" ", args);
+    if (args.length >= 2) {
+      var patternJoiner = new StringJoiner(" ");
+
+      for (var i = 1; i < args.length; ++i)
+        patternJoiner.add(args[i]);
+
+      pattern = patternJoiner.toString();
       mapImages = applyPatternFilter(mapImages, MapImage::fileName, pattern);
     }
 
@@ -41,7 +68,20 @@ public class ImagesListCommand extends SubCommand {
       return null;
     }
 
+    int numberOfEntries = mapImages.size();
+    int numberOfPages = (numberOfEntries + (pageSize - 1)) / pageSize;
+
+    if (page > numberOfPages)
+      page = numberOfPages;
+
+    if (numberOfEntries > pageSize) {
+      var firstIndex = (page - 1) * pageSize;
+      var lastIndex = Math.min(numberOfEntries, firstIndex + pageSize);
+      mapImages = mapImages.subList(firstIndex, lastIndex);
+    }
+
     sender.sendMessage("§8§m                         §8[§aImages§8]§8§m                         ");
+    sender.sendMessage("§7Page " + page + "/" + numberOfPages + "; " + pageSize + " per page; " + numberOfEntries + " total");
 
     if (pattern != null)
       sender.sendMessage("§7(With filter §a" + pattern + "§7)");
@@ -63,7 +103,7 @@ public class ImagesListCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " [Pattern]");
+    return List.of(getCorrespondingAction().normalizedName + " [Page] [Pattern]");
   }
 
   @Override
