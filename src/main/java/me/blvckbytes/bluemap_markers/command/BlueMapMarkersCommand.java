@@ -11,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,13 +23,14 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
   private final Map<NormalizedConstant<?>, SubCommand> subCommands;
 
   public BlueMapMarkersCommand(
+    Plugin plugin,
     ImageStore imageStore,
     ConfigKeeper<MainSection> config
   ) {
     this.config = config;
     this.subCommands = new LinkedHashMap<>();
 
-    registerSubCommand(new ImagesCommand(imageStore));
+    registerSubCommand(new ImagesCommand(plugin, imageStore));
     registerSubCommand(new SetsCommand());
     registerSubCommand(new MarkersCommand());
   }

@@ -23,12 +23,21 @@ public class ImagesDeleteCommand extends SubCommand {
   public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
     var parsedArgs = parseQuotesSupportingArguments(args);
 
-    if (parsedArgs.size() != 1)
+    if (parsedArgs.isEmpty() || parsedArgs.size() > 2)
       return CommandFailure.INVALID_USAGE;
+
+    boolean force = false;
+
+    if (parsedArgs.size() == 2) {
+      if (!parsedArgs.get(1).equalsIgnoreCase("force"))
+        return CommandFailure.INVALID_USAGE;
+
+      force = true;
+    }
 
     var name = parsedArgs.get(0);
 
-    switch (imageStore.deleteImage(name).status) {
+    switch (imageStore.deleteImage(name, force).status) {
       case SUCCESS -> sender.sendMessage("§aThe image " + name + " has been deleted successfully!");
       case IDENTIFIER_NOT_FOUND -> sender.sendMessage("§aThere is no image named " + name + "!");
       case IDENTIFIER_IN_ACTIVE_USE -> sender.sendMessage("§aThe image " + name + " is currently in use and cannot be deleted!");
@@ -46,7 +55,7 @@ public class ImagesDeleteCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name>");
+    return List.of(getCorrespondingAction().normalizedName + " <Name> [force]");
   }
 
   @Override

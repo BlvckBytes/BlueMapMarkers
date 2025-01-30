@@ -21,9 +21,6 @@ import java.util.logging.Logger;
 
 public class ImageStore {
 
-  // TODO: Allow to drop extensions on names (delete, rename, isImage) but have a IDENTIFIER_AMBIGUOUS status-code if there are multiple candidates
-  // TODO: Add public API to check if a name is an existing image - isImage(name)
-
   private final Logger logger;
   private final File assetsFolder;
   private final ConfigKeeper<MainSection> config;
@@ -197,14 +194,57 @@ public class ImageStore {
     return null;
   }
 
-  public OperationResult<?> deleteImage(String name) {
+  public OperationResult<?> deleteRecursive(String path) {
+    try {
+      var targetFile = Paths.get(assetsFolder.getAbsolutePath(), path).toFile();
+
+      if (deleteRecursively(targetFile, 0) == 0)
+        return OperationStatus.IDENTIFIER_NOT_FOUND.asResult();
+
+      return OperationStatus.SUCCESS.asResult();
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, "An error occurred while trying to recursively delete path \"" + path + "\"", e);
+      return OperationStatus.INTERNAL_ERROR.asResult();
+    }
+  }
+
+  private int deleteRecursively(File folder, int count) {
+    if (!folder.isDirectory())
+      return count;
+
+    var files = folder.listFiles();
+
+    if (files == null)
+      return count;
+
+    for (var file : files) {
+      ++count;
+
+      if (file.isDirectory()) {
+        count = deleteRecursively(file, count);
+        continue;
+      }
+
+      if (!file.delete())
+        throw new IllegalStateException("Could not delete file " + file);
+    }
+
+    if (!folder.delete())
+      throw new IllegalStateException("Could not delete folder " + folder);
+
+    return count;
+  }
+
+  public OperationResult<?> deleteImage(String name, boolean force) {
     try {
       var targetFile = getImageFileByName(name);
 
       if (targetFile == null)
         return OperationStatus.IDENTIFIER_NOT_FOUND.asResult();
 
-      // TODO: Check for IDENTIFIER_IN_ACTIVE_USE against existing markers and their variables
+      if (!force) {
+        // TODO: Check for IDENTIFIER_IN_ACTIVE_USE against existing markers and their variables
+      }
 
       if (!targetFile.delete())
         throw new IllegalStateException("Trying to delete the file \"" + targetFile + "\" had no effect!");
@@ -213,6 +253,20 @@ public class ImageStore {
     } catch (Exception e) {
       logger.log(Level.SEVERE, "An error occurred while trying to delete the image named \"" + name + "\"", e);
       return OperationStatus.INTERNAL_ERROR.asResult();
+    }
+  }
+
+  public @Nullable MapImage getImageByName(String name) {
+    try {
+      var imageFile = getImageFileByName(name);
+
+      if (imageFile == null)
+        return null;
+
+      return new MapImage(imageFile.getName(), imageFile.getAbsolutePath(), imageFile.length());
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, "An error occurred while trying to get the image named \"" + name + "\"");
+      return null;
     }
   }
 

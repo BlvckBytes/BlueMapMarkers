@@ -5,6 +5,7 @@ import me.blvckbytes.syllables_matcher.EnumMatcher;
 public enum ImagesAction {
   LIST,
   DELETE,
+  DELETE_RECURSIVE,
   DOWNLOAD,
   RENAME
   ;

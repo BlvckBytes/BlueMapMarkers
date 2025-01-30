@@ -111,7 +111,7 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       var imageStore = new ImageStore(logger, config, blueMap.getWebApp().getWebRoot());
 
       var blueMapMarkersCommand = Objects.requireNonNull(getCommand(BlueMapMarkersCommandSection.INITIAL_NAME));
-      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(imageStore, config);
+      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(this, imageStore, config);
 
       blueMapMarkersCommand.setExecutor(blueMapMarkersCommandHandler);
 
