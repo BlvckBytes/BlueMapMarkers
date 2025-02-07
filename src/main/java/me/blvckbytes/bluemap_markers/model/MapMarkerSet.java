@@ -1,15 +1,17 @@
 package me.blvckbytes.bluemap_markers.model;
 
 import org.bukkit.World;
-
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public record MapMarkerSet(
   World world,
   String name,
-  String label,
+  @Nullable String label,
   int sorting,
   boolean toggleable,
-  boolean defaultHidden,
-  List<MapMarker> members
-) {}
+  boolean defaultHidden
+) {
+  public static final int DEFAULT_SORTING = 0;
+  public static final boolean DEFAULT_TOGGLEABLE = false;
+  public static final boolean DEFAULT_DEFAULT_HIDDEN = false;
+}

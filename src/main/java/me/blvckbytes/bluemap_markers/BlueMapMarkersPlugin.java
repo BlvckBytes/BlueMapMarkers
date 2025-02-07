@@ -7,6 +7,7 @@ import me.blvckbytes.bluemap_markers.config.BlueMapMarkersCommandSection;
 import me.blvckbytes.bluemap_markers.config.MainSection;
 import me.blvckbytes.bluemap_markers.listener.CommandSendListener;
 import me.blvckbytes.bluemap_markers.stores.ImageStore;
+import me.blvckbytes.bluemap_markers.stores.MarkerSetStore;
 import me.blvckbytes.bukkitevaluable.CommandUpdater;
 import me.blvckbytes.bukkitevaluable.ConfigKeeper;
 import me.blvckbytes.bukkitevaluable.ConfigManager;
@@ -22,6 +23,7 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
 
   // TODO: Have configurable usage-strings
   // TODO: Have hover-able usage-strings (descriptions)
+  // TODO: Add crated-at and updated-at stamps to store-resources
 
   /*
     A marker-template may not only specify a single- but multiple markers, each with a suffix
@@ -31,6 +33,8 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
    */
 
   private static final int API_ENABLE_TIMEOUT_S = 30;
+
+  private MarkerSetStore markerSetStore;
 
   @Override
   public void onEnable() {
@@ -57,7 +61,6 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
   }
 
   private void bootstrap(Logger logger, BlueMapAPI blueMap) {
-
     try {
       // First invocation is quite heavy - warm up cache
       XMaterial.matchXMaterial(Material.AIR);
@@ -67,9 +70,10 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       var commandUpdater = new CommandUpdater(this);
 
       var imageStore = new ImageStore(logger, config, blueMap.getWebApp().getWebRoot());
+      markerSetStore = new MarkerSetStore(this, logger);
 
       var blueMapMarkersCommand = Objects.requireNonNull(getCommand(BlueMapMarkersCommandSection.INITIAL_NAME));
-      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(this, imageStore, config, logger);
+      var blueMapMarkersCommandHandler = new BlueMapMarkersCommand(this, imageStore, markerSetStore, config, logger);
 
       blueMapMarkersCommand.setExecutor(blueMapMarkersCommandHandler);
 
@@ -89,5 +93,11 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
       logger.log(Level.SEVERE, "An error occurred while trying to enable the plugin!", e);
       Bukkit.getPluginManager().disablePlugin(this);
     }
+  }
+
+  @Override
+  public void onDisable() {
+    if (markerSetStore != null)
+      markerSetStore.shutdown();
   }
 }

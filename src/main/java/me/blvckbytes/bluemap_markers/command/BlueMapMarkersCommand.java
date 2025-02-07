@@ -6,6 +6,7 @@ import me.blvckbytes.bluemap_markers.command.sub.markers.MarkersCommand;
 import me.blvckbytes.bluemap_markers.command.sub.sets.SetsCommand;
 import me.blvckbytes.bluemap_markers.config.MainSection;
 import me.blvckbytes.bluemap_markers.stores.ImageStore;
+import me.blvckbytes.bluemap_markers.stores.MarkerSetStore;
 import me.blvckbytes.bukkitevaluable.ConfigKeeper;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.Command;
@@ -27,6 +28,7 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
   public BlueMapMarkersCommand(
     Plugin plugin,
     ImageStore imageStore,
+    MarkerSetStore markerSetStore,
     ConfigKeeper<MainSection> config,
     Logger logger
   ) {
@@ -34,7 +36,7 @@ public class BlueMapMarkersCommand implements CommandExecutor, TabCompleter {
     this.subCommands = new LinkedHashMap<>();
 
     registerSubCommand(new ImagesCommand(plugin, imageStore, config));
-    registerSubCommand(new SetsCommand());
+    registerSubCommand(new SetsCommand(markerSetStore, config));
     registerSubCommand(new MarkersCommand());
     registerSubCommand(new ReloadConfigCommand(config, logger));
   }

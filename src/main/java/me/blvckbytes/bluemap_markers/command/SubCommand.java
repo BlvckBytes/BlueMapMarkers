@@ -23,6 +23,15 @@ public abstract class SubCommand {
       .toList();
   }
 
+  protected String joinArgsStartingAtIndex(String[] args, int index) {
+    var argsJoiner = new StringJoiner(" ");
+
+    for (var i = index; i < args.length; ++i)
+      argsJoiner.add(args[i]);
+
+    return argsJoiner.toString();
+  }
+
   protected List<String> collectSubUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender, Map<NormalizedConstant<?>, SubCommand> subCommandMap) {
     var action = actions == null ? null : actions.poll();
 
