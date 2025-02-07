@@ -58,7 +58,7 @@ public class ImagesDownloadCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <URL> <Name>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <URL> <Name>");
   }
 
   @Override

@@ -19,7 +19,7 @@ public abstract class SubCommand {
   protected List<String> prependOwnAction(SubCommand subCommand, List<String> subUsages) {
     return subUsages
       .stream()
-      .map(it -> subCommand.getCorrespondingAction().normalizedName + " " + it)
+      .map(it -> subCommand.getCorrespondingAction().getNormalizedName() + " " + it)
       .toList();
   }
 

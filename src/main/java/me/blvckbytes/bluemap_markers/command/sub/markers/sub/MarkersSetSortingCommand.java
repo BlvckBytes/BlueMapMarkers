@@ -24,7 +24,7 @@ public class MarkersSetSortingCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <Index>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Name> <Index>");
   }
 
   @Override

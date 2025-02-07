@@ -75,7 +75,7 @@ public class ImagesDeleteRecursiveCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Path>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Path>");
   }
 
   @Override

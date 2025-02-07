@@ -24,7 +24,7 @@ public class SetsListCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " [Pattern]");
+    return List.of(getCorrespondingAction().getNormalizedName() + " [Pattern]");
   }
 
   @Override

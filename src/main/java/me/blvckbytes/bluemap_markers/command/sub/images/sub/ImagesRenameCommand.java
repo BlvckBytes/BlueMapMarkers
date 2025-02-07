@@ -56,7 +56,7 @@ public class ImagesRenameCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Old-Name> <New-Name>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Old-Name> <New-Name>");
   }
 
   @Override

@@ -24,7 +24,7 @@ public class SetsMoveToCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <World>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Name> <World>");
   }
 
   @Override

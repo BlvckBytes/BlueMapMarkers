@@ -24,7 +24,7 @@ public class MarkersMoveToCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <x> <y> <z>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Name> <x> <y> <z>");
   }
 
   @Override

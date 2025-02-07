@@ -24,7 +24,7 @@ public class MarkersListCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " [World]");
+    return List.of(getCorrespondingAction().getNormalizedName() + " [World]");
   }
 
   @Override

@@ -24,7 +24,7 @@ public class MarkersNearCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Radius>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Radius>");
   }
 
   @Override

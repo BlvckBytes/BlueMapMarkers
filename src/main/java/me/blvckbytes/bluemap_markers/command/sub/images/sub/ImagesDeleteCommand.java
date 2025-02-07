@@ -40,7 +40,7 @@ public class ImagesDeleteCommand extends SubCommand {
     switch (imageStore.deleteImage(name, force).status) {
       case SUCCESS -> sender.sendMessage("§aThe image " + name + " has been deleted successfully!");
       case IDENTIFIER_NOT_FOUND -> sender.sendMessage("§aThere is no image named " + name + "!");
-      case IDENTIFIER_IN_ACTIVE_USE -> sender.sendMessage("§aThe image " + name + " is currently in use and cannot be deleted!");
+      case IDENTIFIER_IN_ACTIVE_USE -> sender.sendMessage("§aThe image " + name + " is currently in use and cannot be deleted without using the force-flag!");
       case INTERNAL_ERROR -> sender.sendMessage("§cAn internal error occurred; see console!");
       case DUPLICATE_IDENTIFIER -> throw new IllegalStateException();
     }
@@ -55,7 +55,7 @@ public class ImagesDeleteCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> [force]");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Name> [force]");
   }
 
   @Override

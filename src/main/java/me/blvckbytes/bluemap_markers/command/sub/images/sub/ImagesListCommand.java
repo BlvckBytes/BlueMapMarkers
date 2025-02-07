@@ -109,7 +109,7 @@ public class ImagesListCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " [Page] [Pattern]");
+    return List.of(getCorrespondingAction().getNormalizedName() + " [Page] [Pattern]");
   }
 
   @Override

@@ -24,7 +24,7 @@ public class MarkersUnsetVariableCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().normalizedName + " <Name> <Variable>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <Name> <Variable>");
   }
 
   @Override
