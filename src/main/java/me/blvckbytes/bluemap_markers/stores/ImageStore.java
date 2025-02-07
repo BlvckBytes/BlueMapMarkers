@@ -12,8 +12,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -73,14 +78,7 @@ public class ImageStore {
       if (!isImageFile(fileName))
         continue;
 
-      var imageName = fileName;
-
-      if (!pathParts.isEmpty()) {
-        for (var i = pathParts.size() - 1; i >= 0; --i)
-          imageName = Paths.get(pathParts.get(i), imageName).toString();
-      }
-
-      output.add(new MapImage(imageName, containerFile.getAbsolutePath(), containerFile.length()));
+      output.add(createMapImageFromFile(pathParts, containerFile));
     }
   }
 
@@ -263,11 +261,39 @@ public class ImageStore {
       if (imageFile == null)
         return null;
 
-      return new MapImage(imageFile.getName(), imageFile.getAbsolutePath(), imageFile.length());
+      return createMapImageFromFile(List.of(), imageFile);
     } catch (Exception e) {
       logger.log(Level.SEVERE, "An error occurred while trying to get the image named \"" + name + "\"");
       return null;
     }
+  }
+
+  private MapImage createMapImageFromFile(List<String> pathParts, File file) {
+    var imageName = file.getName();
+
+    if (!pathParts.isEmpty()) {
+      for (var i = pathParts.size() - 1; i >= 0; --i)
+        imageName = Paths.get(pathParts.get(i), imageName).toString();
+    }
+
+    LocalDateTime createdAt = null, updatedAt = null;
+
+    try {
+      var attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+
+      createdAt = attributes.creationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+      updatedAt = attributes.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    } catch (Exception e) {
+      long lastModified = file.lastModified();
+
+      if (lastModified > 0)
+        updatedAt = Instant.ofEpochMilli(lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    return new MapImage(
+      imageName, file.getAbsolutePath(), file.length(),
+      createdAt, updatedAt
+    );
   }
 
   private @Nullable File getImageFileByName(String name) {

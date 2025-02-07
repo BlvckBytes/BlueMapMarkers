@@ -10,11 +10,16 @@ import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringJoiner;
 
 public class ImagesListCommand extends SubCommand {
+
+  // TODO: There should be a central date-format within the config
+  private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
   private final ImageStore imageStore;
   private final ConfigKeeper<MainSection> config;
@@ -94,12 +99,19 @@ public class ImagesListCommand extends SubCommand {
 
     for (var mapImage : mapImages) {
       var fileSize = Math.round(mapImage.fileSizeInBytes() / 1000.0 * 100.0) / 100.0;
-      sender.sendMessage("§8> §a" + mapImage.fileName() + " §7(" + fileSize + "KB)");
+      sender.sendMessage("§8> §a" + mapImage.fileName() + "§7, " + fileSize + "KB, created " + formatDateTime(mapImage.createdAt()) + ", updated " + formatDateTime(mapImage.updatedAt()));
     }
 
     sender.sendMessage("§8§m                         §8[§aImages§8]§8§m                         ");
 
     return null;
+  }
+
+  private String formatDateTime(@Nullable LocalDateTime dateTime) {
+    if (dateTime == null)
+      return "?";
+
+    return DATE_TIME_FORMAT.format(dateTime);
   }
 
   @Override
