@@ -130,11 +130,132 @@ public class TemplateVariableType<T> implements MatchableEnum {
   // Value-Transformers
   // ================================================================================
 
-  // TODO: Implement these once they're actually used
-
   private static @Nullable Color tryDeserializeColor(String input, boolean allowAlphaChannel) {
-    throw new UnsupportedOperationException();
+    var tokenizer = new SimpleTokenizer(input);
+    var currentToken = tokenizer.nextToken();
+
+    if (currentToken == null)
+      return null;
+
+    if (currentToken.equals('#')) {
+      if (!(tokenizer.nextToken() instanceof String hexString))
+        return null;
+
+      if (tokenizer.nextToken() != null)
+        return null;
+
+      long hexValue;
+
+      try {
+        hexValue = Long.parseLong(hexString, 16);
+      } catch (Exception e) {
+        return null;
+      }
+
+      if (hexValue > 0xFFFFFFFFL)
+        return null;
+
+      var hasAlpha = hexValue > 0xFFFFFF;
+      var shiftOffset = 0;
+
+      if (hasAlpha) {
+        if (!allowAlphaChannel)
+          return null;
+
+        shiftOffset = 8;
+      }
+
+      int redValue = (int) ((hexValue >> (16 + shiftOffset)) & 0xFF);
+      int greenValue = (int) ((hexValue >> (8 + shiftOffset)) & 0xFF);
+      int blueValue = (int) ((hexValue >> shiftOffset) & 0xFF);
+      int alphaValue = (int) (shiftOffset == 0 ? 0xFF : (hexValue & 0xFF));
+
+      if (!isValidRgba(redValue, greenValue, blueValue, alphaValue))
+        return null;
+
+      return new Color(redValue, greenValue, blueValue, alphaValue);
+    }
+
+    var isRgba = false;
+
+    if (currentToken.equals("rgb") || (isRgba = currentToken.equals("rgba"))) {
+      if (isRgba && !allowAlphaChannel)
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (currentToken == null || !currentToken.equals('('))
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (!(currentToken instanceof Integer redValue))
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (currentToken == null || !currentToken.equals(','))
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (!(currentToken instanceof Integer greenValue))
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (currentToken == null || !currentToken.equals(','))
+        return null;
+
+      currentToken = tokenizer.nextToken();
+
+      if (!(currentToken instanceof Integer blueValue))
+        return null;
+
+      int alphaValue = 0xFF;
+
+      if (isRgba) {
+        currentToken = tokenizer.nextToken();
+
+        if (currentToken == null || !currentToken.equals(','))
+          return null;
+
+        currentToken = tokenizer.nextToken();
+
+        if (currentToken instanceof Integer integerValue)
+          alphaValue = integerValue;
+        else if (currentToken instanceof Double doubleValue)
+          alphaValue = (int) Math.round(doubleValue * 255);
+        else
+          return null;
+      }
+
+      currentToken = tokenizer.nextToken();
+
+      if (currentToken == null || !currentToken.equals(')'))
+        return null;
+
+      if (tokenizer.nextToken() != null)
+        return null;
+
+      if (!isValidRgba(redValue, greenValue, blueValue, alphaValue))
+        return null;
+
+      return new Color(redValue, greenValue, blueValue, alphaValue);
+    }
+
+    return null;
   }
+
+  private static boolean isValidRgba(int red, int green, int blue, int alpha) {
+    return isValidByte(red) && isValidByte(green) && isValidByte(blue) && isValidByte(alpha);
+  }
+
+  private static boolean isValidByte(int value) {
+    return value >= 0 && value <= 255;
+  }
+
+  // TODO: Implement these once they're actually used
 
   private static String serializeColor(Color input) {
     throw new UnsupportedOperationException();
