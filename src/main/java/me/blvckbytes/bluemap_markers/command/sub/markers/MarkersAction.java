@@ -1,8 +1,9 @@
 package me.blvckbytes.bluemap_markers.command.sub.markers;
 
 import me.blvckbytes.syllables_matcher.EnumMatcher;
+import me.blvckbytes.syllables_matcher.MatchableEnum;
 
-public enum MarkersAction {
+public enum MarkersAction implements MatchableEnum {
   CREATE,
   DELETE,
   RENAME,

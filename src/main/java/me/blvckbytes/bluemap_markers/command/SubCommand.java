@@ -1,6 +1,7 @@
 package me.blvckbytes.bluemap_markers.command;
 
 import me.blvckbytes.syllables_matcher.EnumMatcher;
+import me.blvckbytes.syllables_matcher.MatchableEnum;
 import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +54,7 @@ public abstract class SubCommand {
   public abstract NormalizedConstant<?> getCorrespondingAction();
 
   public static @Nullable CommandFailure tryRelayCommand(
-    EnumMatcher<? extends Enum<?>> matcher,
+    EnumMatcher<? extends MatchableEnum> matcher,
     Map<NormalizedConstant<?>, SubCommand> subCommandMap,
     CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions
   ) {
@@ -71,7 +72,7 @@ public abstract class SubCommand {
   }
 
   public static List<String> tryRelayTabComplete(
-    EnumMatcher<? extends Enum<?>> matcher,
+    EnumMatcher<? extends MatchableEnum> matcher,
     Map<NormalizedConstant<?>, SubCommand> subCommandMap,
     CommandSender sender, String[] args
   ) {
@@ -90,7 +91,7 @@ public abstract class SubCommand {
   }
 
   public static @Nullable SubCommand tryFindSubCommand(
-    EnumMatcher<? extends Enum<?>> matcher,
+    EnumMatcher<? extends MatchableEnum> matcher,
     Map<NormalizedConstant<?>, SubCommand> subCommandMap,
     String[] args
   ) {
