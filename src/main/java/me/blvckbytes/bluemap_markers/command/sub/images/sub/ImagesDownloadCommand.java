@@ -23,13 +23,21 @@ public class ImagesDownloadCommand extends SubCommand {
   public @Nullable CommandFailure onCommand(CommandSender sender, String[] args, Queue<NormalizedConstant<?>> actions) {
     var parsedArgs = parseQuotesSupportingArguments(args);
 
-    if (parsedArgs.size() != 2)
+    if (!(parsedArgs.size() == 2 || parsedArgs.size() == 3))
       return CommandFailure.INVALID_USAGE;
 
     var url = parsedArgs.get(0);
     var name = parsedArgs.get(1);
+    var overwrite = false;
 
-    var result = imageStore.downloadImage(name, url);
+    if (parsedArgs.size() == 3) {
+      if (!parsedArgs.get(2).equalsIgnoreCase("overwrite"))
+        return CommandFailure.INVALID_USAGE;
+
+      overwrite = true;
+    }
+
+    var result = imageStore.downloadImage(name, url, overwrite);
 
     if (result.parameter != null) {
       switch (result.parameter) {
@@ -58,7 +66,7 @@ public class ImagesDownloadCommand extends SubCommand {
 
   @Override
   public List<String> getPartialUsages(@Nullable Queue<NormalizedConstant<?>> actions, CommandSender sender) {
-    return List.of(getCorrespondingAction().getNormalizedName() + " <URL> <Name>");
+    return List.of(getCorrespondingAction().getNormalizedName() + " <URL> <Name> [overwrite]");
   }
 
   @Override

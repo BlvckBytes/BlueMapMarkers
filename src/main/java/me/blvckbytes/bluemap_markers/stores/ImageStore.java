@@ -95,7 +95,7 @@ public class ImageStore {
     return config.rootSection.images.imageFileExtensions.contains(extension);
   }
 
-  public OperationResult<ImageDownloadFailure> downloadImage(String name, String url) {
+  public OperationResult<ImageDownloadFailure> downloadImage(String name, String url, boolean overwrite) {
     try {
       if (containsFileExtension(name))
         return OperationStatus.INTERNAL_ERROR.asResult(ImageDownloadFailure.NAME_CONTAINS_EXTENSION);
@@ -129,7 +129,7 @@ public class ImageStore {
 
       var targetFile = Paths.get(assetsFolder.getAbsolutePath(), name + fileExtension).toFile();
 
-      if (targetFile.exists())
+      if (targetFile.exists() && !overwrite)
         return OperationStatus.DUPLICATE_IDENTIFIER.asResult(null);
 
       var targetParent = targetFile.getParentFile();
