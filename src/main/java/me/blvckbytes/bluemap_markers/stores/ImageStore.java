@@ -283,6 +283,10 @@ public class ImageStore {
 
       createdAt = attributes.creationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
       updatedAt = attributes.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+      // Do not treat creation as updating - that's odd
+      if (createdAt != null && createdAt.equals(updatedAt))
+        updatedAt = null;
     } catch (Exception e) {
       long lastModified = file.lastModified();
 

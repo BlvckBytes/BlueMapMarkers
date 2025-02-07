@@ -12,6 +12,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.logging.Logger;
 public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
 
   // TODO: Call events when modifying data as to push latest state to BlueMap
+
+  private static final DateTimeFormatter PERSISTENCE_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
   public MarkerSetStore(Plugin plugin, Logger logger) {
     super(plugin, logger, "marker-sets");
@@ -50,7 +54,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       world, name, null,
       MapMarkerSet.DEFAULT_SORTING,
       MapMarkerSet.DEFAULT_TOGGLEABLE,
-      MapMarkerSet.DEFAULT_DEFAULT_HIDDEN
+      MapMarkerSet.DEFAULT_DEFAULT_HIDDEN,
+      LocalDateTime.now(),
+      null
     );
 
     data.put(normalizedName, newMarkerSet);
@@ -83,7 +89,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSet.label(),
       markerSet.sorting(),
       markerSet.toggleable(),
-      markerSet.defaultHidden()
+      markerSet.defaultHidden(),
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -94,7 +102,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSet.label(),
       markerSet.sorting(),
       markerSet.toggleable(),
-      markerSet.defaultHidden()
+      markerSet.defaultHidden(),
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -105,7 +115,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       label,
       markerSet.sorting(),
       markerSet.toggleable(),
-      markerSet.defaultHidden()
+      markerSet.defaultHidden(),
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -116,7 +128,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSet.label(),
       sorting,
       markerSet.toggleable(),
-      markerSet.defaultHidden()
+      markerSet.defaultHidden(),
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -127,7 +141,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSet.label(),
       markerSet.sorting(),
       toggleable,
-      markerSet.defaultHidden()
+      markerSet.defaultHidden(),
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -138,7 +154,9 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSet.label(),
       markerSet.sorting(),
       markerSet.toggleable(),
-      defaultHidden
+      defaultHidden,
+      markerSet.createdAt(),
+      LocalDateTime.now()
     ));
   }
 
@@ -185,6 +203,10 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       markerSetObject.addProperty("sorting", markerSet.sorting());
       markerSetObject.addProperty("toggleable", markerSet.toggleable());
       markerSetObject.addProperty("defaultHidden", markerSet.defaultHidden());
+      markerSetObject.addProperty("createdAt", PERSISTENCE_DATE_TIME_FORMATTER.format(markerSet.createdAt()));
+
+      if (markerSet.updatedAt() != null)
+        markerSetObject.addProperty("updatedAt", PERSISTENCE_DATE_TIME_FORMATTER.format(markerSet.updatedAt()));
 
       markerSets.add(markerSetObject);
     }
@@ -232,6 +254,14 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       }
 
       var name = namePrimitive.getAsString();
+
+      var normalizedName = normalizeIdentifier(name);
+
+      if (result.containsKey(normalizedName)) {
+        logWarning("Encountered duplicate entry with normalized-name of \"" + normalizedName + "\"; skipping");
+        continue;
+      }
+
       String label = null;
 
       if (markerObject.get("label") instanceof JsonPrimitive labelPrimitive)
@@ -252,20 +282,34 @@ public class MarkerSetStore extends PersistingStore<Map<String, MapMarkerSet>> {
       if (markerObject.get("defaultHidden") instanceof JsonPrimitive defaultHiddenPrimitive && defaultHiddenPrimitive.isBoolean())
         defaultHidden = defaultHiddenPrimitive.getAsBoolean();
 
-      var normalizedName = normalizeIdentifier(name);
+      LocalDateTime createdAt = null;
 
-      if (result.containsKey(normalizedName)) {
-        logWarning("Encountered duplicate entry with normalized-name of \"" + normalizedName + "\"; skipping");
-        continue;
-      }
+      if (markerObject.get("createdAt") instanceof JsonPrimitive createdAtPrimitive)
+        createdAt = tryParseDateTime(createdAtPrimitive.getAsString());
+
+      if (createdAt == null)
+        createdAt = LocalDateTime.now();
+
+      LocalDateTime updatedAt = null;
+
+      if (markerObject.get("updatedAt") instanceof JsonPrimitive updatedAtPrimitive)
+        updatedAt = tryParseDateTime(updatedAtPrimitive.getAsString());
 
       result.put(
         normalizedName,
-        new MapMarkerSet(world, name, label, sorting, toggleable, defaultHidden)
+        new MapMarkerSet(world, name, label, sorting, toggleable, defaultHidden, createdAt, updatedAt)
       );
     }
 
     return result;
+  }
+
+  private @Nullable LocalDateTime tryParseDateTime(String input) {
+    try {
+      return LocalDateTime.from(PERSISTENCE_DATE_TIME_FORMATTER.parse(input));
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   @Override

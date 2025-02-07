@@ -23,7 +23,6 @@ public class BlueMapMarkersPlugin extends JavaPlugin {
 
   // TODO: Have configurable usage-strings
   // TODO: Have hover-able usage-strings (descriptions)
-  // TODO: Add crated-at and updated-at stamps to store-resources
 
   /*
     A marker-template may not only specify a single- but multiple markers, each with a suffix

@@ -10,10 +10,15 @@ import me.blvckbytes.syllables_matcher.NormalizedConstant;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Queue;
 
 public class SetsListCommand extends SubCommand {
+
+  // TODO: There should be a central date-format within the config
+  private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
   private final MarkerSetStore markerSetStore;
   private final ConfigKeeper<MainSection> config;
@@ -92,13 +97,22 @@ public class SetsListCommand extends SubCommand {
           " label=" + markerSet.label() + "," +
           " sorting=" + markerSet.sorting() + "," +
           " toggleable=" + markerSet.toggleable() + "," +
-          " defaultHidden=" + markerSet.defaultHidden()
+          " defaultHidden=" + markerSet.defaultHidden() + "," +
+          " createdAt=" + formatDateTime(markerSet.createdAt()) + "," +
+          " updatedAt=" + formatDateTime(markerSet.updatedAt())
       );
     }
 
     sender.sendMessage("§8§m                         §8[§aMarker-Sets§8]§8§m                         ");
 
     return null;
+  }
+
+  private String formatDateTime(@Nullable LocalDateTime dateTime) {
+    if (dateTime == null)
+      return "?";
+
+    return DATE_TIME_FORMAT.format(dateTime);
   }
 
   @Override
