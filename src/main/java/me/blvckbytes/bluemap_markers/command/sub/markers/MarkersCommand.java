@@ -25,6 +25,7 @@ public class MarkersCommand extends SubCommandWithSubCommands {
     registerSubCommand(new MarkersListVariablesCommand());
     registerSubCommand(new MarkersSetTemplateCommand());
     registerSubCommand(new MarkersSetSetCommand());
+    registerSubCommand(new MarkersSetLabelCommand());
   }
 
   @Override

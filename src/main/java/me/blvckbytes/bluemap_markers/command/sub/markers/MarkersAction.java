@@ -12,6 +12,7 @@ public enum MarkersAction implements MatchableEnum {
   NEAR,
   TOGGLE_LISTED,
   SET_SORTING,
+  SET_LABEL,
   SET_TEMPLATE,
   MOVE_HERE,
   MOVE_TO,
