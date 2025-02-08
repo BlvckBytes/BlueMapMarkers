@@ -4,21 +4,20 @@ import me.blvckbytes.syllables_matcher.EnumMatcher;
 import me.blvckbytes.syllables_matcher.MatchableEnum;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Color;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.function.Function;
 
 public class TemplateVariableType<T> implements MatchableEnum {
 
-  public static final TemplateVariableType<Color> COLOR_RGBA = new TemplateVariableType<>(
-    Color.class,
+  public static final TemplateVariableType<RgbaColor> COLOR_RGBA = new TemplateVariableType<>(
+    RgbaColor.class,
     serialized -> tryDeserializeColor(serialized, true),
     TemplateVariableType::serializeColor
   );
 
-  public static final TemplateVariableType<Color> COLOR_RGB = new TemplateVariableType<>(
-    Color.class,
+  public static final TemplateVariableType<RgbaColor> COLOR_RGB = new TemplateVariableType<>(
+    RgbaColor.class,
     serialized -> tryDeserializeColor(serialized, false),
     TemplateVariableType::serializeColor
   );
@@ -130,7 +129,7 @@ public class TemplateVariableType<T> implements MatchableEnum {
   // Value-Transformers
   // ================================================================================
 
-  private static @Nullable Color tryDeserializeColor(String input, boolean allowAlphaChannel) {
+  private static @Nullable RgbaColor tryDeserializeColor(String input, boolean allowAlphaChannel) {
     var tokenizer = new SimpleTokenizer(input);
     var currentToken = tokenizer.nextToken();
 
@@ -170,10 +169,13 @@ public class TemplateVariableType<T> implements MatchableEnum {
       int blueValue = (int) ((hexValue >> shiftOffset) & 0xFF);
       int alphaValue = (int) (shiftOffset == 0 ? 0xFF : (hexValue & 0xFF));
 
-      if (!isValidRgba(redValue, greenValue, blueValue, alphaValue))
+      if (!(isValidByte(redValue) && isValidByte(greenValue) && isValidByte(blueValue) && isValidByte(alphaValue)))
         return null;
 
-      return new Color(redValue, greenValue, blueValue, alphaValue);
+      return new RgbaColor(
+        redValue, greenValue, blueValue, alphaValue,
+        allowAlphaChannel ? ColorFormat.HEX_RGBA : ColorFormat.HEX_RGB
+      );
     }
 
     var isRgba = false;
@@ -222,9 +224,7 @@ public class TemplateVariableType<T> implements MatchableEnum {
 
         currentToken = tokenizer.nextToken();
 
-        if (currentToken instanceof Integer integerValue)
-          alphaValue = integerValue;
-        else if (currentToken instanceof Double doubleValue)
+        if (currentToken instanceof Double doubleValue)
           alphaValue = (int) Math.round(doubleValue * 255);
         else
           return null;
@@ -238,28 +238,64 @@ public class TemplateVariableType<T> implements MatchableEnum {
       if (tokenizer.nextToken() != null)
         return null;
 
-      if (!isValidRgba(redValue, greenValue, blueValue, alphaValue))
+      if (!(isValidByte(redValue) && isValidByte(greenValue) && isValidByte(blueValue) && isValidByte(alphaValue)))
         return null;
 
-      return new Color(redValue, greenValue, blueValue, alphaValue);
+      return new RgbaColor(
+        redValue, greenValue, blueValue, alphaValue,
+        allowAlphaChannel ? ColorFormat.WEB_RGBA : ColorFormat.WEB_RGB
+      );
     }
 
     return null;
-  }
-
-  private static boolean isValidRgba(int red, int green, int blue, int alpha) {
-    return isValidByte(red) && isValidByte(green) && isValidByte(blue) && isValidByte(alpha);
   }
 
   private static boolean isValidByte(int value) {
     return value >= 0 && value <= 255;
   }
 
-  // TODO: Implement these once they're actually used
+  private static String serializeColor(RgbaColor input) {
+    var result = new StringBuilder();
 
-  private static String serializeColor(Color input) {
-    throw new UnsupportedOperationException();
+    switch (input.format()) {
+      case HEX_RGB, HEX_RGBA -> {
+        result.append('#');
+
+        result.append(String.format("%02X", input.red()));
+        result.append(String.format("%02X", input.green()));
+        result.append(String.format("%02X", input.blue()));
+
+        if (input.format() == ColorFormat.HEX_RGBA)
+          result.append(String.format("%02X", input.alpha()));
+
+      }
+
+      case WEB_RGB, WEB_RGBA -> {
+        result.append("rgb");
+
+        if (input.format() == ColorFormat.WEB_RGBA)
+          result.append('a');
+
+        result.append('(');
+        result.append(input.red());
+        result.append(", ");
+        result.append(input.green());
+        result.append(", ");
+        result.append(input.blue());
+
+        if (input.format() == ColorFormat.WEB_RGBA) {
+          result.append(", ");
+          result.append(Math.round(input.alpha() / 255.0 * 100.0) / 100.0);
+        }
+
+        result.append(')');
+      }
+    }
+
+    return result.toString();
   }
+
+  // TODO: Implement these once they're actually used
 
   private static @Nullable Integer tryDeserializeInteger(String input, boolean allowNegative) {
     throw new UnsupportedOperationException();
