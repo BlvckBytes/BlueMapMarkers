@@ -10,8 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TemplateVariableTypeTests {
 
-  // TODO: Write serialization-tests
-
   @Test
   public void shouldDeserializeRgbColors() {
     assertEquals(new RgbaColor(255, 128, 21, 255, ColorFormat.HEX_RGB), TemplateVariableType.COLOR_RGB.tryRevive("#FF8015"));
@@ -25,6 +23,12 @@ public class TemplateVariableTypeTests {
   }
 
   @Test
+  public void shouldSerializeRgbColors() {
+    assertEquals("#FF8015", TemplateVariableType.COLOR_RGB.serialize(new RgbaColor(255, 128, 21, 255, ColorFormat.HEX_RGB)));
+    assertEquals("rgb(255, 128, 21)", TemplateVariableType.COLOR_RGB.serialize(new RgbaColor(255, 128, 21, 255, ColorFormat.WEB_RGB)));
+  }
+
+  @Test
   public void shouldDeserializeRgbaColors() {
     assertEquals(new RgbaColor(255, 128, 21, 170, ColorFormat.HEX_RGBA), TemplateVariableType.COLOR_RGBA.tryRevive("#FF8015aa"));
     assertNull(TemplateVariableType.COLOR_RGBA.tryRevive("#FF8015aab"));
@@ -35,5 +39,11 @@ public class TemplateVariableTypeTests {
     assertEquals(new RgbaColor(225, 124, 23, 255, ColorFormat.WEB_RGBA), TemplateVariableType.COLOR_RGBA.tryRevive("rgb(225, 124, 23)"));
     assertNull(TemplateVariableType.COLOR_RGBA.tryRevive("rgb(225, 124, 256"));
     assertNull(TemplateVariableType.COLOR_RGBA.tryRevive("rgba(225, 124, 251, 400"));
+  }
+
+  @Test
+  public void shouldSerializeRgbaColors() {
+    assertEquals("#FF8015FF", TemplateVariableType.COLOR_RGBA.serialize(new RgbaColor(255, 128, 21, 255, ColorFormat.HEX_RGBA)));
+    assertEquals("rgba(255, 128, 21, 1.0)", TemplateVariableType.COLOR_RGBA.serialize(new RgbaColor(255, 128, 21, 255, ColorFormat.WEB_RGBA)));
   }
 }
