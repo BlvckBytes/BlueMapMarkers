@@ -16,8 +16,7 @@ public enum MarkersAction implements MatchableEnum {
   SET_TEMPLATE,
   MOVE_HERE,
   MOVE_TO,
-  SET_VARIABLE,
-  UNSET_VARIABLE,
+  CHANGE_VARIABLE,
   LIST_VARIABLES,
   SET_SET,
   ;
